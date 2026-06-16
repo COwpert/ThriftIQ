@@ -3,25 +3,131 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ThriftIQ</title>
+<title>ThriftIQ — Know what it's worth before you buy</title>
+<meta name="description" content="ThriftIQ scans any thrift-store find and instantly shows its resale value, your profit, and whether to buy. Coming soon to the App Store.">
 <style>
-  :root { color-scheme: light dark; }
-  body {
-    font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    display: grid; place-items: center; min-height: 100vh; margin: 0; text-align: center;
-    color: #1c1c1e;
+  :root{
+    --bg:#ffffff; --fg:#10151c; --muted:#5b6675; --card:#f4f6f8; --line:#e6e9ee;
+    --green1:#10c884; --green2:#00825c; --accent:#0a7d4d;
+    color-scheme: light dark;
   }
-  @media (prefers-color-scheme: dark) { body { background: #000; color: #e7e7ea; } a { color: #4ea1ff; } }
-  h1 { font-size: 34px; margin-bottom: 6px; }
-  p { color: #8a8a8e; }
-  a { color: #0a7d4d; }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0a0c0f; --fg:#eef1f5; --muted:#9aa6b4; --card:#14181d; --line:#222a32; --accent:#34d39a; }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:0 auto;padding:0 22px}
+  a{color:var(--accent);text-decoration:none}
+
+  /* Hero */
+  .hero{text-align:center;padding:64px 22px 52px;background:
+      radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--green1) 22%, transparent), transparent 70%)}
+  .icon{width:96px;height:96px;margin:0 auto 22px;display:block;border-radius:24px;
+        box-shadow:0 16px 40px rgba(16,200,132,.35)}
+  h1{font-size:clamp(34px,7vw,56px);font-weight:800;letter-spacing:-.02em;line-height:1.05}
+  .tag{font-size:clamp(17px,3vw,21px);color:var(--muted);max-width:560px;margin:16px auto 30px}
+  .badge{display:inline-flex;align-items:center;gap:10px;background:#000;color:#fff;
+         padding:14px 22px;border-radius:14px;font-weight:600;font-size:16px}
+  .badge svg{width:20px;height:24px}
+  .badge small{display:block;font-size:11px;font-weight:500;opacity:.8;line-height:1}
+  .badge b{font-size:17px;line-height:1.1}
+  .soon{margin-top:14px;font-size:14px;color:var(--muted)}
+
+  /* Sections */
+  section{padding:54px 0}
+  h2{font-size:clamp(24px,4vw,32px);font-weight:800;letter-spacing:-.01em;text-align:center;margin-bottom:8px}
+  .sub{text-align:center;color:var(--muted);margin-bottom:34px}
+  .steps{display:grid;gap:18px;grid-template-columns:repeat(3,1fr)}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px}
+  .num{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;
+       background:linear-gradient(180deg,var(--green1),var(--green2));color:#fff;font-weight:800;margin-bottom:12px}
+  .step h3{font-size:18px;margin-bottom:6px}
+  .step p{color:var(--muted);font-size:15px}
+  .feat{display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
+  .f{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .f .dot{flex:0 0 auto;width:26px;height:26px;border-radius:8px;background:color-mix(in srgb,var(--green1) 20%,transparent);
+          color:var(--accent);display:grid;place-items:center;font-weight:800;font-size:15px}
+  .f h4{font-size:15.5px}
+  .f p{font-size:13.5px;color:var(--muted)}
+
+  /* CTA band */
+  .cta{text-align:center;background:linear-gradient(180deg,var(--green1),var(--green2));color:#fff;border-radius:24px;padding:46px 24px;margin:10px 0 50px}
+  .cta h2{color:#fff}
+  .cta .sub{color:rgba(255,255,255,.9)}
+  .cta .badge{background:#fff;color:#000}
+
+  footer{border-top:1px solid var(--line);padding:30px 22px 50px;text-align:center;color:var(--muted);font-size:14px}
+  footer a{margin:0 10px}
+  @media (max-width:680px){ .steps{grid-template-columns:1fr} .feat{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
-  <div>
+
+  <header class="hero">
+    <!-- App icon: green viewfinder, matches the App Store icon -->
+    <svg class="icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="ThriftIQ icon">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#10c884"/><stop offset="1" stop-color="#00825c"/>
+      </linearGradient></defs>
+      <rect width="100" height="100" rx="23" fill="url(#g)"/>
+      <g fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M30 44 L30 30 L44 30"/>
+        <path d="M70 44 L70 30 L56 30"/>
+        <path d="M30 56 L30 70 L44 70"/>
+        <path d="M70 56 L70 70 L56 70"/>
+      </g>
+    </svg>
     <h1>ThriftIQ</h1>
-    <p>Know what it's worth before you buy.</p>
-    <p><a href="privacy.html">Privacy Policy</a></p>
-  </div>
+    <p class="tag">Know what it's worth before you buy. Scan any thrift-store find and instantly see its resale value, your profit, and whether to buy.</p>
+
+    <!-- ⬇️ WHEN APPROVED: change href="#" to your App Store URL and swap the label to "Download on the App Store" -->
+    <a class="badge" href="#" aria-disabled="true">
+      <svg viewBox="0 0 384 512"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+      <span><small>Coming soon to the</small><b>App Store</b></span>
+    </a>
+    <p class="soon">📱 Launching soon on iPhone — follow <a href="https://instagram.com">@thriftiq</a> for the drop.</p>
+  </header>
+
+  <main class="wrap">
+    <section>
+      <h2>How it works</h2>
+      <p class="sub">Three taps from "is this worth it?" to a confident decision.</p>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><h3>Scan it</h3><p>Snap a photo of any item, pick one from your library, or scan its barcode.</p></div>
+        <div class="step"><div class="num">2</div><h3>See its value</h3><p>ThriftIQ identifies it and estimates resale value on eBay & Facebook Marketplace — plus fees, shipping, and demand.</p></div>
+        <div class="step"><div class="num">3</div><h3>Get the verdict</h3><p>Enter the store's asking price and get an instant Buy, Maybe, or Skip call with your estimated profit.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Everything you need to flip smarter</h2>
+      <p class="sub">Built for resellers, flippers, and anyone who hates overpaying.</p>
+      <div class="feat">
+        <div class="f"><div class="dot">$</div><div><h4>Instant resale estimates</h4><p>eBay & Facebook Marketplace values at a glance.</p></div></div>
+        <div class="f"><div class="dot">%</div><div><h4>Real profit math</h4><p>Fees and shipping factored in, so you see your true margin.</p></div></div>
+        <div class="f"><div class="dot">✓</div><div><h4>Buy / Maybe / Skip</h4><p>A clear verdict at the shelf — no more guessing.</p></div></div>
+        <div class="f"><div class="dot">▦</div><div><h4>Barcode scanning</h4><p>Pinpoint the exact product in a single tap.</p></div></div>
+        <div class="f"><div class="dot">↗</div><div><h4>Profit & inventory tracker</h4><p>Log what you bought, mark items sold, watch profits add up.</p></div></div>
+        <div class="f"><div class="dot">↺</div><div><h4>Scan history</h4><p>Every lookup saved so you can revisit a find later.</p></div></div>
+      </div>
+    </section>
+
+    <div class="cta">
+      <h2>Stop guessing. Start profiting.</h2>
+      <p class="sub">Know what it's worth before you buy.</p>
+      <!-- ⬇️ WHEN APPROVED: same as above — set href to your App Store URL -->
+      <a class="badge" href="#" aria-disabled="true">
+        <svg viewBox="0 0 384 512"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+        <span><small>Coming soon to the</small><b>App Store</b></span>
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 ThriftIQ ·
+    <a href="privacy.html">Privacy Policy</a> ·
+    <a href="support.html">Support</a>
+  </footer>
+
 </body>
 </html>
